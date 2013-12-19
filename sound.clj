@@ -1,3 +1,4 @@
+
 (let [n (quote 3)
       m (quote 3)]
 (-> n inc (+ m)))
@@ -37,6 +38,7 @@
 
 (bar 500)
 (kill bar)
+(stop)
 
 (definst beep [note 60]
   (let [sound-src (sin-osc (midicps note))
@@ -51,6 +53,7 @@
           (env-gen (adsr 0.01 0.1 0.7 0.5) :gate gate :action FREE))))
 
 (pad1)
+(stop)
 
 (for [i (range 200)] (at (+ (now) (* i 20)) (beep i)))
 
@@ -79,6 +82,8 @@
   (Thread/sleep 2000)
   (piano (note :Cb3))
   (piano 68))
+
+(stop)
 
 (def snare (sample (freesound-path 26903)))
 (snare)

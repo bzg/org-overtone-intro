@@ -1,6 +1,6 @@
 #+TITLE: Emacs/Babel/Overtone quick demo
 #+PROPERTY: header-args :results silent
-#+PROPERTY: tangle overtone.clj
+#+PROPERTY: tangle sound.clj
 
 * Config
 
@@ -34,6 +34,8 @@
 (require 'auto-complete)
 (require 'cider)
 (require 'ac-nrepl)
+
+(setq make-backup-files nil)
 #+END_SRC
 
 ** Setup Org Babel and Clojure/Cider
@@ -149,8 +151,6 @@ data
 
 #+BEGIN_SRC clojure
 (use 'overtone.core)
-;; (use 'overtone.studio)
-;; (use 'overtone.examples.midi.keyboard)
 #+END_SRC
 
 #+BEGIN_SRC clojure
