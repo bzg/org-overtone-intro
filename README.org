@@ -5,6 +5,8 @@
 This file will take you through installing Emacs and Overtone so that
 you can play a few notes.
 
+A pdf version of this file is available [[http://bzg.fr/u/org-overtone-intro.pdf][here]].
+
 * Installation (15 minutes)
 
 ** Install GNU Emacs
