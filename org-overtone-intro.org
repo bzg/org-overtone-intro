@@ -1,0 +1,380 @@
+#+TITLE: Emacs Org and Overtone quick intro
+#+PROPERTY: header-args :results silent
+#+LANGUAGE: en
+
+This file will take you through installing Emacs and Overtone so that
+you can play a few notes.
+
+* Installation (15 minutes)
+
+** Install GNU Emacs
+
+If you are using Debian, =~$ apt-get install emacs= will do.
+
+To install Emacs from sources, you can download it from [[ftp://ftp.gnu.org/pub/gnu/emacs/][here]] or clone
+the git mirror:
+
+: ~$ git clone git://git.savannah.gnu.org/emacs.git
+
+** Configure Emacs
+
+The beginning of your Emacs configuration should contain this to add
+=marmelade= to the list of known repositories for Emacs libraries:
+
+#+BEGIN_SRC emacs-lisp :tangle emacs.el
+(require 'package)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+#+END_SRC
+
+Now hit =C-c C-v C-t= to /tangle/ all Emacs Lisp code blocks from this
+file into a new =emacs.el= file in the same directory.
+
+When done, go check this new =emacs.el=.
+
+You can use this =emacs.el= to load the minimal configuration needed
+for this tutorial.
+
+** Install Cider (was "nrepl.el")
+
+Now run Emacs like this:
+
+: ~$ emacs -l /path/to/overtone-intro/emacs.el
+
+In Emacs, get the list of packages:
+
+=M-x list-packages RET= 
+
+and install =cider= from that list.
+
+*Note*: This will also install =clojure-mode-2.0.0=, =cl-lib-0.3=,
+=dash-2.1.0= and =pkg-info-0.3=.
+
+** Install Org-mode
+
+Install the latest version of [[http://orgmode.org/][Org-mode]]:
+
+: ~$ git clone git://orgmode.org/org-mode.git
+: ~$ cd org-mode
+: ~$ make autoloads
+
+This will compile Emacs Lisp files in the =org-mode/lisp/= directory
+and create =org-loaddefs.el=, containing the necessary autoloads.
+
+** Configure Org-mode
+
+This simple Org configuration should do:
+
+#+BEGIN_SRC emacs-lisp :tangle emacs.el
+(add-to-list 'load-path "~/install/git/org-mode/")
+(require 'org)
+
+;; We only need Emacs Lisp and Clojure in this tutorial:
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (clojure . t)))
+
+;; Use cider as the clojure execution backend
+(setq org-babel-clojure-backend 'cider)
+
+;; Let's have pretty source code blocks
+(setq org-edit-src-content-indentation 0
+      org-src-tab-acts-natively t
+      org-src-fontify-natively t
+      org-confirm-babel-evaluate nil)
+#+END_SRC
+
+** Configure cider
+
+#+BEGIN_SRC emacs-lisp :tangle emacs.el
+;; Cider configuration
+(require 'cider)
+(setq nrepl-hide-special-buffers t
+      cider-repl-pop-to-buffer-on-connect nil
+      cider-popup-stacktraces nil
+      cider-repl-popup-stacktraces t)
+#+END_SRC
+
+** Install leiningen
+
+[[http://leiningen.org][leiningen]] is the /de facto/ standard for running Clojure projects.
+
+Check the very simple [[http://leiningen.org/#install][installation instructions]].
+
+** project.clj and Overtone as a dependency
+
+Previously, we hit =C-c C-v C-t= to tangle Emacs Lisp code blocks into
+=emacs.el=.  Since =C-c C-v C-t= tangles /all blocks/ in the buffer,
+we also created =project.clj=, which is needed in order to run =lein=
+and to let =cider= interact with =lein=.
+
+#+BEGIN_SRC clojure :tangle project.clj
+(defproject overtone-intro "1.0"
+  :dependencies [[org.clojure/clojure "1.5.1"]
+                 [overtone "0.9.1"]])
+#+END_SRC
+
+From the =overtone-intro= directory, run =~$ lein deps= to load all
+dependencies.
+
+** Additional keybindings
+
+During the live demo, I used these keybindings:
+
+#+BEGIN_SRC emacs-lisp :tangle emacs.el
+;; Useful keybindings when using Clojure from Org
+(org-defkey org-mode-map "\C-x\C-e" 'cider-eval-last-sexp)
+(org-defkey org-mode-map "\C-c\C-d" 'cider-doc)
+#+END_SRC
+
+They allow to execute a Clojure source code block by hitting =C-x C-e=
+after a Clojure sexp, and to get a Clojure docstring by hitting =C-c
+C-d= after a symbol.
+
+If you don't use these keybindings, executing source code blocks is
+done by hitting =C-c C-c= on the =#+BEGIN_SRC= line.
+
+** Summary
+
+This is an overview of my configuration:
+
+| Prog/Package  |   Version |
+|---------------+-----------|
+| GNU Emacs     | 24.3.50.1 |
+| CIDER         |       0.5 |
+| auto-complete |     1.4.0 |
+| dash.el       |     2.3.0 |
+| pkg-info      |       0.4 |
+| Org-mode      |     8.2.4 |
+| Clojure       |     1.5.1 |
+| Overtone      |     0.9.1 |
+
+The tutorial should work with older versions of Emacs, but you need to
+install Org-mode from its master branch to use [[https://github.com/clojure-emacs/cider][cider]].
+
+Also, remember to hit =TAB= for (un)folding a section or a source code
+block.
+
+* cider-jack-in
+
+To connect the current Org buffer to a nrepl, run 
+
+=M-x cider-jack-in=
+
+... and wait until you get a confirmation message in the minibuffer.
+
+Do this now, you'll need it soon.
+
+* A quick intro to Org Babel
+
+To get a gist of what Org Babel is, hit =C-c C-c= on the =#+BEGIN_SRC=
+line below:
+
+#+BEGIN_SRC emacs-lisp
+(message "Yeah!")
+#+END_SRC
+
+Emacs minibuffer displays the output: yeah!
+
+** Babel: vars
+
+You can bind variables in Babel source code blocks---hit =C-c C-c= on
+the code blocks below:
+
+#+BEGIN_SRC emacs-lisp :var n=3
+(message (number-to-string n))
+#+END_SRC
+
+#+BEGIN_SRC clojure 
+(-> n inc (+ m))
+#+END_SRC
+
+** Babel: lists
+
+Okay, you get it: hit =C-c C-c= on code blocks to execute them.
+
+#+NAME: example-list
+- simple
+- list
+
+#+BEGIN_SRC emacs-lisp :var x=example-list
+(print x)
+#+END_SRC
+
+#+BEGIN_SRC clojure :var x=example-list
+(map clojure.string/upper-case x)
+#+END_SRC
+
+** Babel: tables
+
+#+NAME: example-table
+| 1 | a |
+| 2 | b |
+| 3 | c |
+| 4 | d |
+
+#+BEGIN_SRC emacs-lisp :var data=example-table[2:3]
+data
+#+END_SRC
+
+* A quick intro to Overtone
+** Overtone: loading and booting
+
+#+BEGIN_SRC clojure 
+(use 'overtone.core)
+#+END_SRC
+
+#+BEGIN_SRC clojure 
+(boot-external-server)
+#+END_SRC
+
+*Note*: I'm using GNU/Linux, and I didn't take the time to configure
+jackd properly.  You may want to use this instead:
+
+#+BEGIN_SRC clojure 
+(use 'overtone.live)
+(boot-internal-server)
+#+END_SRC
+
+** Overtone: playing/fooling around
+
+*Note*: the first time you use the =overtone.inst.piano= namespace, it
+will load quite a lot of files from freesound.org -- you may want to
+do this within a bare =lein repl= in order to make sure the process is
+over.
+
+#+BEGIN_SRC clojure 
+(use 'overtone.inst.piano)
+#+END_SRC
+
+Play a simple midi note:
+
+#+BEGIN_SRC clojure 
+(piano 60)
+#+END_SRC
+
+#+BEGIN_SRC clojure 
+(doseq [note (chord :C3)] (piano note))
+#+END_SRC
+
+#+BEGIN_SRC clojure 
+(doseq [note (chord :E3 :minor)] (piano note))
+#+END_SRC
+
+#+BEGIN_SRC clojure 
+(defn play-chord [chord]
+  (doseq [note chord] (piano note)))
+
+(play-chord (chord :A3 :minor))
+#+END_SRC
+
+#+BEGIN_SRC clojure 
+(let [time (now)]
+  (at time (play-chord (chord :C3 :major)))
+  (at (+ 1000 time) (play-chord (chord :C3 :major7)))
+  (at (+ 2000 time) (play-chord (chord :E3 :minor)))
+  (at (+ 3000 time) (play-chord (chord :A2 :minor))))
+#+END_SRC
+
+=defsynth= and =definst= are the two entry points for creating sounds
+and instruments -- go check their docstrings, they explain a lot.
+
+#+BEGIN_SRC clojure 
+(defsynth bar [freq 440]
+  (out 0 (sin-osc freq)))
+
+(bar 500)
+(kill bar)
+(stop)
+
+(definst beep [note 60]
+  (let [sound-src (sin-osc (midicps note))
+	env (env-gen (perc 0.01 1.0) :action FREE)] ; sam uses :free
+    (* sound-src env)))
+
+(beep 60)
+
+(defsynth pad1 [freq 110 amp 1 gate 1 out-bus 0]
+  (out out-bus
+       (* (saw [freq (* freq 1.01)])
+	  (env-gen (adsr 0.01 0.1 0.7 0.5) :gate gate :action FREE))))
+
+(pad1)
+(stop)
+
+;; Let's try something a bit crazy
+(for [i (range 200)] (at (+ (now) (* i 20)) (beep i)))
+#+END_SRC
+
+Some more copy-and-paste from overtone's wiki:
+
+#+BEGIN_SRC clojure 
+(map piano [60 63 67])
+(map piano (map note [:C3 :E4 :G4]))
+(map piano (map note [:C#5 :E4 :G4]))
+(map piano (map note [:Cb2 :E4 :G4]))
+
+(definst steel-drum [note 60 amp 0.8]
+  (let [freq (midicps note)]
+    (* amp
+       (env-gen (perc 0.01 0.2) 1 1 0 1 :action FREE)
+       (+ (sin-osc (/ freq 2))
+	  (rlpf (saw freq) (* 1.1 freq) 0.4)))))
+
+(steel-drum (note :E3))
+(map steel-drum (map note [:E3 :D#4]))
+#+END_SRC
+
+** Overtone: loading .wav samples
+
+#+BEGIN_SRC clojure 
+;; Hint: adapt this to your own .wav files
+(def noa (sample "/path/to/a/file.wav"))
+
+(let []
+  (noa)
+  (Thread/sleep 3000)
+  (piano (note :Cb3))
+  (piano 68))
+
+(stop)
+#+END_SRC
+
+** Overtone: using freesound.org
+
+You can download samples directly from freesound.org via Overtone:
+
+#+BEGIN_SRC clojure 
+(def snare (sample (freesound-path 26903)))
+(snare)
+(def clic (sample (freesound-path 406)))
+(clic)
+(def steam (sample (freesound-path 30628)))
+(steam)
+(def clap (sample (freesound-path 48310)))
+(clap)
+(def clap2 (sample (freesound-path 132676)))
+(clap2)
+(def boom (sample (freesound-path 80401)))
+(boom)
+#+END_SRC
+
+* Why I love this?
+
+- I love sounds.
+
+- I love Org+Cider /reactivity/: evaluating Clojure sexps is fast.
+
+- I love building (mostly random) sounds so fast, it feels like
+  /sculpting/ music.
+
+* Exploring further
+
+- https://github.com/overtone/overtone
+- https://github.com/overtone/overtone/blob/master/src/overtone/samples/freesound.clj
+- http://skillsmatter.com/podcast/home/functional-composition
+- http://blog.josephwilk.net/clojure/creating-instruments-with-overtone.html
+- http://www.tonalsoft.com/pub/news/pitch-bend.aspx
+- http://www.freesound.org/

@@ -1,0 +1,4 @@
+(def directory (clojure.java.io/file "/home/guerry/org"))
+(file-seq directory)
+(def directory (clojure.java.io/file "/home/guerry/install/git/boulot/jecode/resources/public/md/"))
+(file-seq directory)
