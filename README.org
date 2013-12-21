@@ -5,9 +5,11 @@
 This file will take you through installing Emacs and Overtone so that
 you can play a few notes.
 
-A pdf version of this file is available [[http://bzg.fr/u/org-overtone-intro.pdf][here]].
+You want to read it within GNU Emacs and Org-mode.
 
-* Installation (15 minutes)
+A PDF version is available [[http://bzg.fr/u/org-overtone-intro.pdf][here]].
+
+* Installation
 
 ** Install GNU Emacs
 
@@ -159,11 +161,11 @@ install Org-mode from its master branch to use [[https://github.com/clojure-emac
 Also, remember to hit =TAB= for (un)folding a section or a source code
 block.
 
-* cider-jack-in
+* Connect to the repl
 
-To connect the current Org buffer to a nrepl, run 
+To connect the current Org buffer to a repl, run
 
-=M-x cider-jack-in=
+=M-x cider-jack-in RET=
 
 ... and wait until you get a confirmation message in the minibuffer.
 
