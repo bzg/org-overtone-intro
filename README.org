@@ -388,6 +388,11 @@ You can download samples directly from freesound.org via Overtone:
 - I love building (mostly random) sounds so fast, it feels like
   /sculpting/ music.
 
+* Issues
+
+If you run into issues while following this tutorial, please report
+them on [[https://github.com/bzg/org-overtone-intro][github]].  
+
 * Exploring further
 
 - https://github.com/overtone/overtone
