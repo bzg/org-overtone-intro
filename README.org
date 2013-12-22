@@ -2,10 +2,10 @@
 #+PROPERTY: header-args :results silent
 #+LANGUAGE: en
 
-This file will take you through installing Emacs and Overtone so that
-you can play a few notes.
+This file will take you through installing [[http://www.gnu.org/software/emacs/][GNU Emacs]] and [[http://overtone.github.io/][Overtone]] so
+that you can play a few notes.
 
-You want to read it within GNU Emacs and Org-mode.
+You want to read it within GNU Emacs and [[http://orgmode.org/][Org-mode]].
 
 A PDF version is available [[http://bzg.fr/u/org-overtone-intro.pdf][here]].
 
@@ -106,6 +106,20 @@ This simple Org configuration should do:
 [[http://leiningen.org][leiningen]] is the /de facto/ standard for running Clojure projects.
 
 Check the very simple [[http://leiningen.org/#install][installation instructions]].
+
+** Install SuperCollider
+
+Supercollider is the audio synthetizer.  You need it to play sounds
+with Overtone.
+
+: ~$ apt-get install supercollider
+
+For other platforms, see the supercollider [[http://supercollider.sourceforge.net/downloads/][downloads page]].
+
+In this tutorial, we will play piano, so we need the [[http://sourceforge.net/projects/sc3-plugins/][sc3-plugins]].
+
+If you want to compile supercollider and sc3-plugins from sources,
+check [[https://github.com/overtone/overtone/wiki/Compiling-SuperCollider][this page]] from the Overtone wiki.
 
 ** project.clj and Overtone as a dependency
 
