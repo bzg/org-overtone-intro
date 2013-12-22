@@ -109,10 +109,12 @@ Check the very simple [[http://leiningen.org/#install][installation instructions
 
 ** Install SuperCollider
 
-Supercollider is the audio synthetizer.  You need it to play sounds
-with Overtone.
+Supercollider is the audio synthetizer.
 
-: ~$ apt-get install supercollider
+You need it to play sounds with Overtone.
+
+On Debian, you can install SuperCollider the usual way: =~$ apt-get
+install supercollider=.
 
 For other platforms, see the supercollider [[http://supercollider.sourceforge.net/downloads/][downloads page]].
 
